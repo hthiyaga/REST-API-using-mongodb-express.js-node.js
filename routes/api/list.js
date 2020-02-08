@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const List = require('../../models/List');
+const Lead = require('../../models/Lead');
 const User = require('../../models/User');
-
 //@route  POST api/list
 //@desc   Test route
 //@access public

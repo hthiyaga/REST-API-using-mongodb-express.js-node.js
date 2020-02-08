@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const List = require('../../models/List');
+const User = require('../../models/User');
+
 //@route  GET api/list
 //@desc   Test route
 //@access public
@@ -39,9 +41,9 @@ router.post('/', async (req, res) => {
   res.send('Seller route');
 });
 
-router.get('/', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const seller = await User.find().populate();
+    const seller = await User.find({ user_id: req.params.id }).populate();
 
     res.json(seller);
   } catch (err) {
