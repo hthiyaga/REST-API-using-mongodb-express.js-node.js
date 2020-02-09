@@ -48,8 +48,6 @@ router.post('/', async (req, res) => {
 //@access public
 router.get('/', async (req, res) => {
   try {
-    //console.log(req.query.year);
-    // const list = await List.findOne({ year: req.query.year }).populate();
     const list = await List.find().populate();
     res.json(list);
   } catch (err) {
@@ -75,33 +73,20 @@ router.get('/searchby/:id', async (req, res) => {
 //@access public
 router.get('/searchby/', async (req, res) => {
   try {
+    //  if (typeof req.query.fromrange == 'undefined') {
+    //   req.query.fromrange = 0;
+    //   req.query.torange = 0;
+    // }
     const list = await List.find({
+      vehicletype: req.query.type,
       $or: [
-        { year: req.query.year },
-        { vehicletype: req.query.type }
-        //{ price: { $gt: req.query.fromrange, $lt: req.query.torange } }
-      ]
-    }).populate();
-    res.json(list);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
-
-//@route  GET api/list
-//@desc   Get list based on keyword
-//@access public
-router.get('/searchbykeyword/', async (req, res) => {
-  try {
-    const list = await List.find({
-      $or: [
-        { make: req.query.key },
-        { model: req.query.key },
-        { description: req.query.key },
-        { 'meta.color': req.query.key },
-        { 'meta.transmission': req.query.key }
-      ]
+        { make: req.query.keyword },
+        { model: req.query.keyword },
+        { description: req.query.keyword },
+        { 'meta.color': req.query.keyword },
+        { 'meta.transmission': req.query.keyword }
+      ],
+      price: { $gt: req.query.fromrange, $lt: req.query.torange }
     }).populate();
     res.json(list);
   } catch (err) {

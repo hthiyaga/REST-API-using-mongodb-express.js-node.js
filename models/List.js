@@ -36,6 +36,10 @@ const ListSchema = new mongoose.Schema({
   ],
   user_id: {
     type: Number
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
   }
 });
 

@@ -26,6 +26,10 @@ const UserSchema = new mongoose.Schema({
   },
   reviews: {
     type: [String]
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
   }
 });
 

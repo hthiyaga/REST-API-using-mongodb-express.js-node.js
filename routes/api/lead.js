@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const List = require('../../models/List');
 const Lead = require('../../models/Lead');
+
 //@route  GET api/list
 //@desc   Test route
 //@access public
@@ -9,7 +10,7 @@ const Lead = require('../../models/Lead');
 router.post('/', async (req, res) => {
   console.log(req.body);
 
-  const { vehicle_id, name, phonenumber, email, softdelete } = req.body;
+  const { vehicle_id, name, phonenumber, email, status, created_at } = req.body;
 
   try {
     let lead = new Lead({
@@ -17,7 +18,8 @@ router.post('/', async (req, res) => {
       name,
       phonenumber,
       email,
-      softdelete
+      status,
+      created_at
     });
 
     await lead.save();
@@ -28,13 +30,33 @@ router.post('/', async (req, res) => {
   res.send('Seller route');
 });
 
-//Get leads for specific vehicles
-router.get('/:id', async (req, res) => {
+// change status to distributed
+router.put('/:id', async (req, res) => {
   try {
-    console.log(req.params.id);
-    const lead = await Lead.find({ vehicle_id: req.params.id }).populate();
+    let lead = await Lead.findOne({ _id: req.params.id }).populate();
+    lead.status = 'Distributed';
+    await lead.save();
 
     res.json(lead);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+//Get leads based on vehicle id as well as lead id
+
+router.get('/:id', async (req, res) => {
+  try {
+    const lead = await Lead.find({
+      vehicle_id: req.params.id,
+      status: 'Distributed'
+    }).populate();
+    if (lead.length > 0) {
+      res.json(lead);
+    } else {
+      const lead = await Lead.find({ _id: req.params.id }).populate();
+      res.json(lead);
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -44,7 +66,6 @@ router.get('/:id', async (req, res) => {
 //get all leads
 router.get('/', async (req, res) => {
   try {
-    console.log(req.params.id);
     const lead = await Lead.find().populate();
 
     res.json(lead);
@@ -59,9 +80,7 @@ router.get('/', async (req, res) => {
 router.put('/update/:id/', async (req, res) => {
   try {
     let lead = await Lead.findOne({ _id: req.params.id }).populate();
-    if (lead) {
-      lead = await Lead.findOneAndUpdate({ softdelete: true });
-    }
+    lead.status = 'Delete';
     await lead.save();
 
     res.json(lead);
