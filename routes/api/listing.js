@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const List = require('../../models/List');
+const Listing = require('../../models/Listing');
 const Lead = require('../../models/Lead');
 const User = require('../../models/User');
-//@route  POST api/list
+
+//@route  POST api/listing
 //@desc   Test route
 //@access public
 
@@ -23,7 +24,7 @@ router.post('/', async (req, res) => {
   } = req.body;
 
   try {
-    let list = new List({
+    let listing = new List({
       year,
       make,
       model,
@@ -40,36 +41,36 @@ router.post('/', async (req, res) => {
     console.error(err.message);
     res.status(500).send('server error');
   }
-  res.send('List route');
+  res.send('Listing route');
 });
 
-//@route  GET api/list
-//@desc   Get all lists
+//@route  GET api/listing
+//@desc   Get all listings
 //@access public
 router.get('/', async (req, res) => {
   try {
-    const list = await List.find().populate();
-    res.json(list);
+    const listing = await Listing.find().populate();
+    res.json(listing);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
 });
 
-//@route  GET api/list
-//@desc   Get list by ID
+//@route  GET api/listing
+//@desc   Get listing by ID
 //@access public
 router.get('/searchby/:id', async (req, res) => {
   try {
-    const list = await List.find({ _id: req.params.id }).populate();
-    res.json(list);
+    const listing = await Listing.find({ _id: req.params.id }).populate();
+    res.json(listing);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
 });
-//@route  GET api/list
-//@desc   Get list based on vehicle type
+//@route  GET api/listing
+//@desc   Get listing based on vehicle type
 //@access public
 router.get('/searchby/', async (req, res) => {
   try {
@@ -77,7 +78,7 @@ router.get('/searchby/', async (req, res) => {
     //   req.query.fromrange = 0;
     //   req.query.torange = 0;
     // }
-    const list = await List.find({
+    const listing = await Listing.find({
       vehicletype: req.query.type,
       $or: [
         { make: req.query.keyword },
@@ -88,24 +89,24 @@ router.get('/searchby/', async (req, res) => {
       ],
       price: { $gt: req.query.fromrange, $lt: req.query.torange }
     }).populate();
-    res.json(list);
+    res.json(listing);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
 });
 
-//@route  GET api/list
-//@desc   Get list based on pricerange
+//@route  GET api/listing
+//@desc   Get listing based on pricerange
 //@access public
 
 router.get('/searchbypricerange/', async (req, res) => {
   console.log(req.query.fromrange);
   try {
-    const list = await List.find({
+    const listing = await Listing.find({
       price: { $gt: req.query.fromrange, $lt: req.query.torange }
     }).populate();
-    res.json(list);
+    res.json(listing);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
@@ -114,6 +115,7 @@ router.get('/searchbypricerange/', async (req, res) => {
 
 module.exports = router;
 
+//Pagination logic
 // let page_size = 10;
 // skips = page_size * (page_num - 1);
 // //for page 1
@@ -125,6 +127,6 @@ module.exports = router;
 // // skips =10 *(2-1);
 // //skips =10
 // // It will skip the first 10 records fetches from 10-20
-// const list = await List.find()
+// const listing = await Listing.find()
 //   .skip(skips)
 //   .limit(page_size).populate;

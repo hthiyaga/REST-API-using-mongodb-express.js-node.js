@@ -12,7 +12,7 @@ app.get('/', (req, res) => res.send('API Running'));
 
 //Define routes
 
-app.use('/api/list', require('./routes/api/list'));
+app.use('/api/listing', require('./routes/api/listing'));
 app.use('/api/seller', require('./routes/api/user'));
 app.use('/api/lead', require('./routes/api/lead'));
 const PORT = 3000;

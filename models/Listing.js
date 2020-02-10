@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ListSchema = new mongoose.Schema({
+const ListingSchema = new mongoose.Schema({
   year: {
     type: Number
   },
@@ -43,4 +43,4 @@ const ListSchema = new mongoose.Schema({
   }
 });
 
-module.exports = List = mongoose.model('list', ListSchema);
+module.exports = Listing = mongoose.model('listing', ListingSchema);

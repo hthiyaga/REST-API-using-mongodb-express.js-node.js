@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const List = require('../../models/List');
+const List = require('../../models/Listing');
 const Lead = require('../../models/Lead');
-
-//@route  GET api/list
-//@desc   Test route
-//@access public
 
 router.post('/', async (req, res) => {
   console.log(req.body);
@@ -27,7 +23,7 @@ router.post('/', async (req, res) => {
     console.error(err.message);
     res.status(500).send('server error');
   }
-  res.send('Seller route');
+  res.send('Lead posted');
 });
 
 // change status to distributed
@@ -43,6 +39,7 @@ router.put('/:id', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
 //Get leads based on vehicle id as well as lead id
 
 router.get('/:id', async (req, res) => {
@@ -77,7 +74,7 @@ router.get('/', async (req, res) => {
 
 //update status of the lead
 
-router.put('/update/:id/', async (req, res) => {
+router.delete('/update/:id', async (req, res) => {
   try {
     let lead = await Lead.findOne({ _id: req.params.id }).populate();
     lead.status = 'Delete';

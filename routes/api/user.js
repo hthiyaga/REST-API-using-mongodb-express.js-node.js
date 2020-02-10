@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const List = require('../../models/List');
+const Listing = require('../../models/Listing');
 const User = require('../../models/User');
 
 //@route  GET api/list
